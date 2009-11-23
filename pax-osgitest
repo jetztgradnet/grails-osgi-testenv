@@ -1,0 +1,19 @@
+#!/bin/sh
+
+BASEDIR=`dirname $0`
+
+if [ -x $BASEDIR/env.sh ]; then
+. $BASEDIR/env.sh
+fi
+
+OPTIONS=
+while getopts 'd' OPT "$@"; do
+        case "$OPT" in
+        d) OPTIONS="-d";;
+        esac
+done
+
+shift $(( OPTIND - 1 ))
+unset OPTIND
+
+$BASEDIR/runpax $OPTIONS -- scan-composite:file:config/osgitest-app.profile $@

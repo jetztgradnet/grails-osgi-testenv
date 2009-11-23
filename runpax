@@ -1,0 +1,32 @@
+#!/bin/sh
+
+BASEDIR=`dirname $0`
+
+if [ -x $BASEDIR/env.sh ]; then
+. $BASEDIR/env.sh
+fi
+
+export PAXRUNNER_HOME=../../pax-runner
+export PATH=$PATH:$PAXRUNNER_HOME/bin
+
+# these options are only for pax-runner
+# the OSGi framework will be started in its own JVM
+# with settings specified in config/settings.conf
+#export JAVA_OPTS=-Xmx256m
+
+alias paxrun="pax-run.sh"
+
+LOGGING="--log=info"
+
+while getopts 'd' OPT "$@"; do
+        case "$OPT" in
+        d) LOGGING="--log=debug";;
+        esac
+done
+
+shift $(( OPTIND - 1 ))
+unset OPTIND
+
+export JAVA_OPTS=-Xmx256m
+paxrun --args=file:config/settings.conf $LOGGING $@
+
