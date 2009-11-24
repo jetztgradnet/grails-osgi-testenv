@@ -1,4 +1,4 @@
-181,210d180
+181,213d180
 < 			// OSGi bundle headers
 < 			attribute(name:"Bundle-ManifestVersion",value:"2")
 < 			attribute(name:"Bundle-Name",value:"${grailsAppName}")
@@ -17,6 +17,9 @@
 < 				"javax.servlet",
 < 				"javax.servlet.http",
 < 				"javax.servlet.resources",
+< 				"javax.servlet.jsp;resolution:=optional",
+< 				"javax.servlet.jsp.el;resolution:=optional",
+< 				"javax.servlet.jsp.tagext;resolution:=optional",
 < 				"javax.servlet.jsp.resources;resolution:=optional",
 < 				"javax.xml.parsers",
 < 				"org.w3c.dom",
@@ -29,7 +32,7 @@
 < 			attribute(name:"Webapp-Context",value:"${grailsAppName}")
 < 
 < 
-265c235
+268c235
 <     def resourceList = GrailsResourceLoaderHolder.resourceLoader.getResources()
 ---
 >     def resourceList = pluginSettings.getArtefactResources()
