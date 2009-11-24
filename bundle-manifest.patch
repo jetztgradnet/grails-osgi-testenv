@@ -1,38 +1,51 @@
-181,213d180
-< 			// OSGi bundle headers
-< 			attribute(name:"Bundle-ManifestVersion",value:"2")
-< 			attribute(name:"Bundle-Name",value:"${grailsAppName}")
-< 			attribute(name:"Bundle-SymbolicName",value:"${grailsAppName}")
-< 			attribute(name:"Bundle-Version",value:"${metadata.getApplicationVersion()}")
-< 			// add all jars in WEB-INF/lib
-< 			def libDir = new File("${stagingDir}/WEB-INF/lib")
-< 			// TODO re-add "." to bundle class path?
-< 			def classPathEntries = [ /*".",*/ "WEB-INF/classes" ] 
-< 			if(includeJars) {
-< 				libDir.eachFileMatch(~/.*\.jar/) { classPathEntries << "WEB-INF/lib/${it.name}" }
-< 			}
-< 			def classPath = classPathEntries.join(',')
-< 			attribute(name:"Bundle-ClassPath",value:"${classPath}")
-< 			def importedPackageList = [
-< 				"javax.servlet",
-< 				"javax.servlet.http",
-< 				"javax.servlet.resources",
-< 				"javax.servlet.jsp;resolution:=optional",
-< 				"javax.servlet.jsp.el;resolution:=optional",
-< 				"javax.servlet.jsp.tagext;resolution:=optional",
-< 				"javax.servlet.jsp.resources;resolution:=optional",
-< 				"javax.xml.parsers",
-< 				"org.w3c.dom",
-< 				"org.xml.sax",
-< 				"org.xml.sax.ext",
-< 				"org.xml.sax.helpers",
-< 			];
-< 			def importedPackages = importedPackageList.join(',')
-< 			attribute(name:"Import-Package", value:"${importedPackages}")
-< 			attribute(name:"Webapp-Context",value:"${grailsAppName}")
-< 
-< 
-268c235
-<     def resourceList = GrailsResourceLoaderHolder.resourceLoader.getResources()
----
->     def resourceList = pluginSettings.getArtefactResources()
+--- /Users/wolfgang/dev/workspaces/grails/grails/grails/scripts/_GrailsWar.groovy	2009-11-16 03:24:51.000000000 +0100
++++ scripts/_GrailsWar.groovy	2009-11-24 10:42:41.000000000 +0100
+@@ -178,6 +178,39 @@
+         ant.mkdir(dir:metaInfo)
+         String manifestFile = "$metaInfo/MANIFEST.MF"
+         ant.manifest(file:manifestFile) {
++			// OSGi bundle headers
++			attribute(name:"Bundle-ManifestVersion",value:"2")
++			attribute(name:"Bundle-Name",value:"${grailsAppName}")
++			attribute(name:"Bundle-SymbolicName",value:"${grailsAppName}")
++			attribute(name:"Bundle-Version",value:"${metadata.getApplicationVersion()}")
++			// add all jars in WEB-INF/lib
++			def libDir = new File("${stagingDir}/WEB-INF/lib")
++			// TODO re-add "." to bundle class path?
++			def classPathEntries = [ /*".",*/ "WEB-INF/classes" ] 
++			if(includeJars) {
++				libDir.eachFileMatch(~/.*\.jar/) { classPathEntries << "WEB-INF/lib/${it.name}" }
++			}
++			def classPath = classPathEntries.join(',')
++			attribute(name:"Bundle-ClassPath",value:"${classPath}")
++			def importedPackageList = [
++				"javax.servlet",
++				"javax.servlet.http",
++				"javax.servlet.resources",
++				"javax.servlet.jsp;resolution:=optional",
++				"javax.servlet.jsp.el;resolution:=optional",
++				"javax.servlet.jsp.tagext;resolution:=optional",
++				"javax.servlet.jsp.resources;resolution:=optional",
++				"javax.xml.parsers",
++				"org.w3c.dom",
++				"org.xml.sax",
++				"org.xml.sax.ext",
++				"org.xml.sax.helpers",
++			];
++			def importedPackages = importedPackageList.join(',')
++			attribute(name:"Import-Package", value:"${importedPackages}")
++			attribute(name:"Webapp-Context",value:"${grailsAppName}")
++
++
+             section(name:"Grails Application") {
+                 attribute(name:"Implementation-Title",value:"${grailsAppName}")
+                 attribute(name:"Implementation-Version",value:"${metadata.getApplicationVersion()}")
+@@ -232,7 +265,7 @@
+ 
+ 
+ target(createDescriptor:"Creates the WEB-INF/grails.xml file used to load Grails classes in WAR mode") {
+-    def resourceList = pluginSettings.getArtefactResources()
++    def resourceList = GrailsResourceLoaderHolder.resourceLoader.getResources()
+     def pluginInfos = pluginSettings.getPluginInfos(pluginsHome)
+ 
+     new File("${stagingDir}/WEB-INF/grails.xml").withWriter { writer ->
